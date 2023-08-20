@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "130826080077",
+    "project_id": "pisciculturaapp",
+    "storage_bucket": "pisciculturaapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:130826080077:android:e1a17d2e15d9cdfe06b104",
+        "android_client_info": {
+          "package_name": "com.pisciculturaapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "130826080077-icr5fq2o98n6f28ab6p2ibahqmrp6ama.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pisciculturaapp",
+            "certificate_hash": "7dd0a24a076a143962f5151fbdb42a902b5c37e6"
+          }
+        },
+        {
+          "client_id": "130826080077-7usfbjtrdlbojvpjf4u7dv6dei2d79tc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDMgaASGypDgIwylXfrqbhz6CsoAyEox10"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "130826080077-7usfbjtrdlbojvpjf4u7dv6dei2d79tc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
