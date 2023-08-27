@@ -125,4 +125,3 @@ const styles = StyleSheet.create({
 });
 
 export default RegistrationForm;
-//Jaime jaimito@gmail.com prueba1234
