@@ -6,7 +6,6 @@ import {
   StyleSheet,
   Button,
 } from 'react-native';
-import auth from '@react-native-firebase/auth';
 import {useNavigation} from '@react-navigation/native'; // Importa useNavigation
 
 interface MainMenuProps {
@@ -19,12 +18,18 @@ const MainMenuScreen: React.FC<MainMenuProps> = ({onSignOut}) => {
   const goToUserManagement = () => {
     navigation.navigate('UserManagement'); // Navega a la pantalla UserManagementScreen
   };
+  const goToSales = () => {
+    navigation.navigate('Sales'); // Navega a la pantalla de ventas
+  };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
       {/* ... */}
       <TouchableOpacity style={styles.button} onPress={goToUserManagement}>
         <Text style={styles.buttonText}>Gestión de usuarios</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.button} onPress={goToSales}>
+        <Text style={styles.buttonText}>Ventas</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.button}>
         <Text style={styles.buttonText}>Pendiente</Text>
