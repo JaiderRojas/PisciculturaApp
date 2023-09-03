@@ -21,6 +21,9 @@ const MainMenuScreen: React.FC<MainMenuProps> = ({onSignOut}) => {
   const goToSales = () => {
     navigation.navigate('Sales'); // Navega a la pantalla de ventas
   };
+  const goToPonds = () => {
+    navigation.navigate('Ponds'); // Navega a la pantalla de estanques
+  };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -30,6 +33,9 @@ const MainMenuScreen: React.FC<MainMenuProps> = ({onSignOut}) => {
       </TouchableOpacity>
       <TouchableOpacity style={styles.button} onPress={goToSales}>
         <Text style={styles.buttonText}>Ventas</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.button} onPress={goToPonds}>
+        <Text style={styles.buttonText}>Estanques</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.button}>
         <Text style={styles.buttonText}>Pendiente</Text>

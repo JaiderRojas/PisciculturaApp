@@ -9,6 +9,7 @@ import MainMenuScreen from './src/screens/MainMenuScreen';
 import UserManagementScreen from './src/screens/UserManagementScreen';
 import SalesScreen from './src/screens/SalesScreen';
 import PreviousSalesScreen from './src/screens/PreviousSalesScreen';
+import PondsScreen from './src/screens/PondsScreen';
 
 const Stack = createNativeStackNavigator();
 const queryClient = new QueryClient();
@@ -78,6 +79,11 @@ const App: React.FC = () => {
                 name="PreviousSales"
                 component={PreviousSalesScreen}
                 options={{title: 'Ventas Anteriores'}}
+              />
+              <Stack.Screen
+                name="Ponds"
+                component={PondsScreen}
+                options={{title: 'Estanques'}}
               />
             </>
           ) : (
