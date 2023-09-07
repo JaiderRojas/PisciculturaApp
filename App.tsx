@@ -10,6 +10,9 @@ import UserManagementScreen from './src/screens/UserManagementScreen';
 import SalesScreen from './src/screens/SalesScreen';
 import PreviousSalesScreen from './src/screens/PreviousSalesScreen';
 import PondsScreen from './src/screens/PondsScreen';
+import FeedingGuideScreen from './src/screens/FeedingGuideScreen';
+import AddGuide from './src/components/AddGuide';
+import ViewGuide from './src/components/ViewGuide';
 
 const Stack = createNativeStackNavigator();
 const queryClient = new QueryClient();
@@ -84,6 +87,21 @@ const App: React.FC = () => {
                 name="Ponds"
                 component={PondsScreen}
                 options={{title: 'Estanques'}}
+              />
+              <Stack.Screen
+                name="FeedingGuide"
+                component={FeedingGuideScreen}
+                options={{title: 'Guías de Alimentacíon'}}
+              />
+              <Stack.Screen
+                name="AddGuide"
+                component={AddGuide}
+                options={{title: 'Agregar Guía de Alimentación'}}
+              />
+              <Stack.Screen
+                name="ViewGuide"
+                component={ViewGuide}
+                options={{title: 'Ver Guía'}}
               />
             </>
           ) : (

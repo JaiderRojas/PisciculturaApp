@@ -429,10 +429,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
   },
-  ButtonText: {
-    color: 'white',
-    fontSize: 20,
-  },
   modalContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -484,9 +480,9 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     marginLeft: 10,
   },
-  addButtonText: {
+  ButtonText: {
     color: 'white',
-    fontSize: 16,
+    fontSize: 20,
   },
   table: {
     flex: 1,

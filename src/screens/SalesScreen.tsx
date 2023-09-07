@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import {useNavigation} from '@react-navigation/native';
+import {Picker} from '@react-native-picker/picker';
 
 const SalesScreen: React.FC = () => {
   const navigation = useNavigation();
@@ -17,6 +18,51 @@ const SalesScreen: React.FC = () => {
   const [precioPorLibra, setPrecioPorLibra] = useState('');
   const [numeroDePeces, setNumeroDePeces] = useState('');
   const [precioTotal, setPrecioTotal] = useState('');
+  const [selectedPond, setSelectedPond] = useState('');
+  const [ponds, setPonds] = useState<{id: string; numeroDeEstanque: number}[]>(
+    [],
+  );
+  // Obtener la lista de estanques desde Firestore al cargar la pantalla
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const estanquesRef = await firestore().collection('estanques').get();
+        const estanquesData = estanquesRef.docs.map(doc => ({
+          id: doc.id,
+          numeroDeEstanque: doc.data().numeroDeEstanque, // Ajusta esto según tu estructura de datos
+        }));
+        setPonds(estanquesData);
+      } catch (error) {
+        console.error('Error al obtener los estanques:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+  // Restar el número de peces del estanque seleccionado
+  const subtractFishFromPond = async () => {
+    if (selectedPond && numeroDePeces !== '') {
+      try {
+        const pondRef = firestore().collection('estanques').doc(selectedPond);
+
+        await firestore().runTransaction(async transaction => {
+          const pondDoc = await transaction.get(pondRef);
+          const currentFishCount = pondDoc.data()?.peces || 0;
+          const updatedFishCount =
+            currentFishCount - parseInt(numeroDePeces, 10);
+
+          if (updatedFishCount >= 0) {
+            transaction.update(pondRef, {peces: updatedFishCount});
+            return true;
+          } else {
+            return false;
+          }
+        });
+      } catch (error) {
+        console.error('Error al restar peces del estanque:', error);
+      }
+    }
+  };
 
   const formatPrice = (amount: number): string => {
     return amount.toLocaleString('es-CO', {
@@ -92,16 +138,18 @@ const SalesScreen: React.FC = () => {
         precioTotal: parsedPeso * parsedprecioPorLibra,
         fecha: new Date(),
         numeroDePeces: parsedNumeroDePeces,
+        estanque: selectedPond,
       };
 
       await firestore().collection('ventas').add(ventaData);
+      // Restar el número de peces del estanque seleccionado
+      await subtractFishFromPond();
       showSuccess();
     } catch (error) {
       console.error('Error al registrar la venta:', error);
       showError();
     }
   };
-
   // Función para navegar a la pantalla de ventas anteriores
   const goToPreviousSales = () => {
     navigation.navigate('PreviousSales'); // Navega a la pantalla de ventas anteriores
@@ -151,6 +199,23 @@ const SalesScreen: React.FC = () => {
           onChangeText={setNumeroDePeces}
           keyboardType="numeric"
         />
+      </View>
+
+      <View style={styles.inputContainer}>
+        <Text style={styles.text}>Estanque</Text>
+        <Picker
+          selectedValue={selectedPond}
+          onValueChange={itemValue => setSelectedPond(itemValue)}
+          style={styles.input}>
+          <Picker.Item label="Seleccionar Estanque" value="" />
+          {ponds.map(pond => (
+            <Picker.Item
+              key={pond.id}
+              label={`Estanque ${pond.numeroDeEstanque}`}
+              value={pond.id}
+            />
+          ))}
+        </Picker>
       </View>
 
       <View style={styles.inputContainer}>

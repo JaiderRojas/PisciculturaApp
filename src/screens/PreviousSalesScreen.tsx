@@ -36,6 +36,9 @@ const PreviousSalesScreen: React.FC = () => {
             <Text style={styles.text}>
               Precio por Libra: {item.precioPorLibra}
             </Text>
+            <Text style={styles.text}>
+              Numero de peces: {item.numeroDePeces}
+            </Text>
           </View>
         )}
       />
