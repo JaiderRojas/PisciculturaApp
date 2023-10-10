@@ -27,9 +27,11 @@ const MainMenuScreen: React.FC<MainMenuProps> = ({onSignOut}) => {
   const goToFeedingGuide = () => {
     navigation.navigate('FeedingGuide'); // Navega a la pantalla de estanques
   };
+  const goToScheduleFeeding = () => {
+    navigation.navigate('ScheduleFeeding'); // Navega a la pantalla de estanques
+  };
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      {/* ... */}
       <TouchableOpacity style={styles.button} onPress={goToUserManagement}>
         <Text style={styles.buttonText}>Gestión de usuarios</Text>
       </TouchableOpacity>
@@ -42,11 +44,13 @@ const MainMenuScreen: React.FC<MainMenuProps> = ({onSignOut}) => {
       <TouchableOpacity style={styles.button} onPress={goToFeedingGuide}>
         <Text style={styles.buttonText}>Guías de alimentación</Text>
       </TouchableOpacity>
+      <TouchableOpacity style={styles.button} onPress={goToScheduleFeeding}>
+        <Text style={styles.buttonText}>Programar Alimentación</Text>
+      </TouchableOpacity>
       <TouchableOpacity style={styles.button}>
         <Text style={styles.buttonText}>Pendiente</Text>
       </TouchableOpacity>
       <Button title="Cerrar Sesión" onPress={onSignOut} />
-      {/* ... */}
     </ScrollView>
   );
 };
@@ -63,7 +67,7 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: '#3498db',
     width: 200,
-    height: 100,
+    height: 75,
     borderRadius: 10,
     marginBottom: 10,
     justifyContent: 'center',

@@ -18,6 +18,7 @@ interface Pond {
   temperatura: number;
   peces: number;
   numeroDeEstanque: number;
+  pesoPromedio: number;
 }
 
 const PondsScreen: React.FC = () => {
@@ -26,6 +27,7 @@ const PondsScreen: React.FC = () => {
   const [temperature, setTemperature] = useState('');
   const [fishCount, setFishCount] = useState('');
   const [nextPondNumber, setNextPondNumber] = useState(1);
+  const [newPondWeight, setNewPondWeight] = useState('');
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
@@ -33,7 +35,7 @@ const PondsScreen: React.FC = () => {
 
   const handleAddPonds = async () => {
     try {
-      if (!volume || !temperature || !fishCount) {
+      if (!volume || !temperature || !fishCount || !newPondWeight) {
         Alert.alert('Error', 'Por favor, completa todos los campos.');
         return;
       }
@@ -47,6 +49,7 @@ const PondsScreen: React.FC = () => {
         temperatura: parseFloat(temperature),
         peces: parseInt(fishCount, 10),
         numeroDeEstanque: newPondNumber,
+        pesoPromedio: parseFloat(newPondWeight),
       };
 
       await firestore().collection('estanques').add(newPondData);
@@ -247,10 +250,50 @@ const PondsScreen: React.FC = () => {
       );
     }
   };
+  // Estado para el modal de editar peso promedio
+  const [isEditWeightModalVisible, setEditWeightModalVisible] = useState(false);
+  const [selectedPondToEditWeight, setSelectedPondToEditWeight] = useState('');
+  const [editedWeight, setEditedWeight] = useState('');
+
+  const toggleEditWeightModal = () => {
+    setEditWeightModalVisible(!isEditWeightModalVisible);
+  };
+
+  const handleEditWeight = async () => {
+    try {
+      // Validar que los campos no estén vacíos
+      if (!selectedPondToEditWeight || !editedWeight) {
+        Alert.alert('Error', 'Por favor, completa todos los campos.');
+        return;
+      }
+
+      // Obtener el estanque seleccionado
+      const selectedPondRef = firestore()
+        .collection('estanques')
+        .doc(selectedPondToEditWeight);
+
+      // Actualizar el peso promedio en el estanque
+      await selectedPondRef.update({
+        pesoPromedio: parseFloat(editedWeight),
+      });
+
+      // Cerrar el modal
+      toggleEditWeightModal();
+      Alert.alert('Éxito', 'Peso promedio editado correctamente.');
+    } catch (error) {
+      console.error('Error al editar el peso promedio:', error);
+
+      // Mostrar alerta de error
+      Alert.alert(
+        'Error',
+        'Ocurrió un error al editar el peso promedio. Por favor, inténtalo nuevamente.',
+      );
+    }
+  };
 
   return (
     <View style={styles.container}>
-      {/* Modals */}
+      {/* Modal para Agregar Estanques */}
       <Modal visible={isModalVisible} animationType="slide" transparent={true}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
@@ -275,6 +318,14 @@ const PondsScreen: React.FC = () => {
               placeholder="Peces #"
               value={fishCount}
               onChangeText={setFishCount}
+              keyboardType="numeric"
+              style={styles.input}
+              placeholderTextColor={'black'}
+            />
+            <TextInput
+              placeholder="Peso Promedio(g)"
+              value={newPondWeight}
+              onChangeText={setNewPondWeight}
               keyboardType="numeric"
               style={styles.input}
               placeholderTextColor={'black'}
@@ -388,6 +439,47 @@ const PondsScreen: React.FC = () => {
           </View>
         </View>
       </Modal>
+      {/* Modal para Editar Peso Promedio */}
+      <Modal
+        visible={isEditWeightModalVisible}
+        animationType="slide"
+        transparent={true}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Editar Peso Promedio</Text>
+
+            <Picker
+              selectedValue={selectedPondToEditWeight}
+              onValueChange={itemValue =>
+                setSelectedPondToEditWeight(itemValue)
+              }
+              style={styles.picker}>
+              <Picker.Item label="Seleccionar Estanque" value="" />
+              {pondsData.map(pond => (
+                <Picker.Item
+                  key={pond.id}
+                  label={`Estanque ${pond.numeroDeEstanque}`}
+                  value={pond.id}
+                />
+              ))}
+            </Picker>
+
+            <TextInput
+              placeholder="Peso Promedio"
+              value={editedWeight}
+              onChangeText={setEditedWeight}
+              keyboardType="numeric"
+              style={styles.input}
+              placeholderTextColor={'black'}
+            />
+
+            <View style={styles.modalButtonContainer}>
+              <Button title="Guardar" onPress={handleEditWeight} />
+              <Button title="Cancelar" onPress={toggleEditWeightModal} />
+            </View>
+          </View>
+        </View>
+      </Modal>
 
       {/* Botones */}
       <TouchableOpacity style={styles.Button} onPress={toggleModal}>
@@ -410,6 +502,8 @@ const PondsScreen: React.FC = () => {
           <Text style={styles.tableHeaderText}>Volumen</Text>
           <Text style={styles.tableHeaderText}>Temperatura</Text>
           <Text style={styles.tableHeaderText}># Peces</Text>
+          <Text style={styles.tableHeaderText}>Peso Promedio</Text>
+          <Text style={styles.tableHeaderText}>(gramos)</Text>
         </View>
         {pondsData.map(item => (
           <View key={item.id} style={styles.tableRow}>
@@ -417,6 +511,18 @@ const PondsScreen: React.FC = () => {
             <Text style={styles.tableCell}>{item.volumen} m3</Text>
             <Text style={styles.tableCell}>{item.temperatura}°</Text>
             <Text style={styles.tableCell}>{item.peces}</Text>
+            <Text style={styles.tableCell}>{item.pesoPromedio}</Text>
+            <View style={styles.tableCell}>
+              <TouchableOpacity
+                style={styles.EditButton}
+                onPress={() => {
+                  setSelectedPondToEditWeight(item.id);
+                  setEditedWeight(item.pesoPromedio.toString());
+                  toggleEditWeightModal();
+                }}>
+                <Text>Editar</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         ))}
       </View>
@@ -479,6 +585,13 @@ const styles = StyleSheet.create({
     marginTop: 10,
     alignSelf: 'flex-start',
     marginLeft: 10,
+  },
+  EditButton: {
+    backgroundColor: '#3498db',
+    borderRadius: 10,
+    paddingVertical: 4,
+    paddingHorizontal: 7,
+    alignSelf: 'flex-start',
   },
   ButtonText: {
     color: 'white',

@@ -87,7 +87,20 @@ const AddGuide: React.FC = () => {
       '300-400': 0,
     },
   });
-
+  // Agrega un estado para la frecuencia de suministro
+  const [feedingFrequency, setFeedingFrequency] = useState<{
+    [key: string]: number;
+  }>({
+    // Inicializa con valores por defecto o vacíos según tus necesidades
+    '5-10': 0,
+    '10-20': 0,
+    '20-40': 0,
+    '40-70': 0,
+    '70-120': 0,
+    '120-200': 0,
+    '200-300': 0,
+    '300-400': 0,
+  });
   // Función para manejar cambios en los porcentajes
   const handlePercentageChange = (
     temp: string,
@@ -102,6 +115,13 @@ const AddGuide: React.FC = () => {
       },
     }));
   };
+  // Función para manejar cambios en la frecuencia de suministro
+  const handleFrequencyChange = (range: string, value: string) => {
+    setFeedingFrequency(prevFrequency => ({
+      ...prevFrequency,
+      [range]: parseInt(value, 10), // Asegura que el valor sea un número entero
+    }));
+  };
 
   // Función para guardar los porcentajes en Firebase
   const savePercentageDataToFirebase = async () => {
@@ -109,6 +129,7 @@ const AddGuide: React.FC = () => {
       const docData = {
         species,
         percentages: percentageData,
+        feedingFrequency,
       };
       const docRef = await firestore().collection('guias').add(docData);
       Alert.alert('Éxito', 'Datos guardados con éxito');
@@ -159,6 +180,22 @@ const AddGuide: React.FC = () => {
               ))}
             </View>
           ))}
+          {/* Agregar la fila para la frecuencia de suministro */}
+          <View style={styles.tableRow}>
+            <Text style={styles.tableHeader}>.......</Text>
+            {Object.keys(feedingFrequency).map((range, index) => (
+              <TextInput
+                key={index}
+                style={styles.tableCell}
+                value={feedingFrequency[range].toString()}
+                onChangeText={value => handleFrequencyChange(range, value)}
+                keyboardType="numeric"
+              />
+            ))}
+          </View>
+          <View style={styles.tableRow}>
+            <Text style={styles.tableHeader}>Frecuencia de suministro</Text>
+          </View>
         </ScrollView>
       </ScrollView>
       <View style={styles.inputContainer}>
@@ -180,7 +217,7 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    margin: 20,
+    marginLeft: 10,
   },
   input: {
     flex: 1,
@@ -224,7 +261,6 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     paddingHorizontal: 10,
     marginBottom: 10,
-    marginTop: 10,
     alignSelf: 'flex-start',
     marginLeft: 10,
   },

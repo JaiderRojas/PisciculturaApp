@@ -13,6 +13,7 @@ import PondsScreen from './src/screens/PondsScreen';
 import FeedingGuideScreen from './src/screens/FeedingGuideScreen';
 import AddGuide from './src/components/AddGuide';
 import ViewGuide from './src/components/ViewGuide';
+import ScheduleFeedingScreen from './src/screens/ScheduleFeedingScreen';
 
 const Stack = createNativeStackNavigator();
 const queryClient = new QueryClient();
@@ -102,6 +103,11 @@ const App: React.FC = () => {
                 name="ViewGuide"
                 component={ViewGuide}
                 options={{title: 'Ver Guía'}}
+              />
+              <Stack.Screen
+                name="ScheduleFeeding"
+                component={ScheduleFeedingScreen}
+                options={{title: 'Programar Alimentación'}}
               />
             </>
           ) : (

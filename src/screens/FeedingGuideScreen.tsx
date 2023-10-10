@@ -48,6 +48,7 @@ const FeedingGuideScreen: React.FC = () => {
       guideId: guide.id,
       species: guide.species,
       percentages: guide.percentages,
+      feedingFrequency: guide.feedingFrequency,
     });
   };
 

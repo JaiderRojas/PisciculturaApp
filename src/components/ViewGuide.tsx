@@ -100,33 +100,42 @@ const ViewGuide: React.FC = ({route}) => {
         <ScrollView contentContainerStyle={styles.table}>
           <View style={styles.tableRow}>
             <Text style={styles.tableHeader}>°C Agua</Text>
-            {Object.keys(percentages[21]).map((range, index) => (
-              <Text key={index} style={styles.tableHeader}>
-                {range}
-              </Text>
-            ))}
-          </View>
-          {Object.keys(percentages).map((temp, index) => (
-            <View key={index} style={styles.tableRow}>
-              <Text style={styles.tableHeader}>{temp}</Text>
-              {Object.keys(percentages[temp]).map((range, innerIndex) => (
-                <TextInput
-                  key={innerIndex}
-                  style={styles.tableCell}
-                  value={
-                    isEditing
-                      ? editedPercentages[temp][range].toString()
-                      : percentages[temp][range].toString()
-                  }
-                  onChangeText={value =>
-                    handlePercentageChange(temp, range, value)
-                  }
-                  keyboardType="numeric"
-                  editable={isEditing}
-                />
+            {Object.keys(percentages[21])
+              .sort((a, b) => parseFloat(a) - parseFloat(b))
+              .map((range, index) => (
+                <Text key={index} style={styles.tableHeader}>
+                  {range}
+                </Text>
               ))}
-            </View>
-          ))}
+          </View>
+          {Object.keys(percentages)
+            .sort((a, b) => parseFloat(a) - parseFloat(b))
+            .map((temp, index) => (
+              <View key={index} style={styles.tableRow}>
+                <Text style={styles.tableHeader}>{temp}</Text>
+                {Object.keys(percentages[temp])
+                  .sort((a, b) => parseFloat(a) - parseFloat(b))
+                  .map((range, innerIndex) => (
+                    <TextInput
+                      key={innerIndex}
+                      style={styles.tableCell}
+                      value={
+                        isEditing
+                          ? editedPercentages[temp][range].toString()
+                          : percentages[temp][range].toString()
+                      }
+                      onChangeText={value =>
+                        handlePercentageChange(temp, range, value)
+                      }
+                      keyboardType="numeric"
+                      editable={isEditing}
+                    />
+                  ))}
+              </View>
+            ))}
+          <View style={styles.tableRow}>
+            <Text style={styles.tableHeader}>Frecuencia de suministro</Text>
+          </View>
         </ScrollView>
       </ScrollView>
     </>
